@@ -4,11 +4,17 @@ FROM openjdk:17-alpine
 # Set working directory
 WORKDIR /app
 
-# Copy the pre-built JAR (this is simpler)
-COPY target/hospital-0.0.1-SNAPSHOT.jar app.jar
+# Copy Maven wrapper and configuration
+COPY mvnw ./
+COPY .mvn .mvn
+COPY pom.xml ./
+
+# Make Maven wrapper executable and build
+RUN chmod +x ./mvnw && \
+    ./mvnw clean package -DskipTests
 
 # Expose port 8080
 EXPOSE 8080
 
 # Run the application
-CMD ["java", "-jar", "app.jar"]
+CMD ["java", "-jar", "target/hospital-0.0.1-SNAPSHOT.jar"]
