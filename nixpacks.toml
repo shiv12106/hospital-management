@@ -1,0 +1,11 @@
+[phases.setup]
+nixPkgs = ["openjdk17", "maven"]
+
+[phases.build]
+cmds = ["./mvnw.cmd clean package -DskipTests"]
+
+[start]
+cmd = "java -jar target/hospital-0.0.1-SNAPSHOT.jar"
+
+[variables]
+PORT = "8080"
