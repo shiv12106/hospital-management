@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Appointment - HMS</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f5f5f5; }
+        .navbar { background: #27ae60; padding: 15px 30px; color: white; display: flex; justify-content: space-between; align-items: center; }
+        .navbar h1 { font-size: 1.5em; }
+        .logout-btn { background: #e74c3c; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; }
+        .container { max-width: 800px; margin: 30px auto; padding: 0 20px; }
+        .breadcrumb { margin-bottom: 20px; color: #666; }
+        .breadcrumb a { color: #3498db; text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+        .form-container { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; color: #2c3e50; font-weight: 600; }
+        .form-group input, .form-group select { width: 100%; padding: 10px; border: 1px solid #bdc3c7; border-radius: 5px; font-family: inherit; }
+        .btn-save { background: #27ae60; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; }
+        .btn-save:hover { background: #229954; }
+        .btn-cancel { background: #95a5a6; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; margin-left: 10px; text-decoration: none; display: inline-block; }
+        .btn-cancel:hover { background: #7f8c8d; }
+        .header { background: white; padding: 20px; border-radius: 8px; margin-bottom: 30px; }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <h1>🏥 Hospital Management System - Admin</h1>
+        <form action="/logout" method="post" style="margin:0;">
+            <button type="submit" class="logout-btn">Logout</button>
+        </form>
+    </div>
+
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="/admin/dashboard">Dashboard</a> &gt; <a href="/admin/appointments">Appointments</a> &gt; Edit
+        </div>
+
+        <div class="header">
+            <h2>✏️ Edit Appointment</h2>
+        </div>
+
+        <div class="form-container">
+            <form method="post" th:action="@{/admin/appointments/edit/{id}(id=${appointment.id})}">
+                <div class="form-group">
+                    <label>Patient *</label>
+                    <select name="patientId" required>
+                        <option value="">--Select--</option>
+                        <option th:each="p : ${patients}" th:value="${p.id}" th:text="${p.name}" th:selected="${appointment.patient != null and appointment.patient.id == p.id}"></option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Doctor *</label>
+                    <select name="doctorId" required>
+                        <option value="">--Select--</option>
+                        <option th:each="d : ${doctors}" th:value="${d.id}" th:text="${d.name}" th:selected="${appointment.doctor != null and appointment.doctor.id == d.id}"></option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Department</label>
+                    <select name="departmentId">
+                        <option value="">--None--</option>
+                        <option th:each="dept : ${departments}" th:value="${dept.id}" th:text="${dept.name}" th:selected="${appointment.department != null and appointment.department.id == dept.id}"></option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Date & Time *</label>
+                    <input type="datetime-local" name="dateTime" th:value="${#temporals.format(appointment.appointmentDate, 'yyyy-MM-dd\'T\'HH:mm')}" required>
+                </div>
+                <div class="form-group">
+                    <label>Reason</label>
+                    <input type="text" name="reason" th:value="${appointment.reason}">
+                </div>
+                <button type="submit" class="btn-save">Update Appointment</button>
+                <a href="/admin/appointments" class="btn-cancel">Cancel</a>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

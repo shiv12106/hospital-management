@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Departments - Hospital Management System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+        }
+        .navbar {
+            background: #2c3e50;
+            padding: 15px 30px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .navbar h1 {
+            font-size: 1.5em;
+        }
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            padding: 8px 15px;
+            background: #e74c3c;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+        .navbar a:hover {
+            background: #c0392b;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        .header {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header h2 {
+            color: #2c3e50;
+        }
+        .btn-add {
+            background: #27ae60;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+        .btn-add:hover {
+            background: #229954;
+        }
+        .table-container {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        thead {
+            background: #34495e;
+            color: white;
+        }
+        th {
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #ecf0f1;
+        }
+        tbody tr:hover {
+            background: #f9f9f9;
+        }
+        .btn-edit, .btn-delete {
+            padding: 5px 10px;
+            margin: 0 5px;
+            border-radius: 3px;
+            text-decoration: none;
+            font-size: 0.9em;
+            cursor: pointer;
+            border: none;
+            transition: 0.3s;
+        }
+        .btn-edit {
+            background: #3498db;
+            color: white;
+        }
+        .btn-edit:hover {
+            background: #2980b9;
+        }
+        .btn-delete {
+            background: #e74c3c;
+            color: white;
+        }
+        .btn-delete:hover {
+            background: #c0392b;
+        }
+        .breadcrumb {
+            margin-bottom: 20px;
+            color: #666;
+        }
+        .breadcrumb a {
+            color: #3498db;
+            text-decoration: none;
+        }
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+        .form-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #2c3e50;
+            font-weight: 600;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #bdc3c7;
+            border-radius: 5px;
+            font-family: inherit;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <h1>🏥 Hospital Management System</h1>
+        <form action="/logout" method="post" style="margin:0;">
+            <button type="submit" style="background: #e74c3c; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; transition: 0.3s;">Logout</button>
+        </form>
+    </div>
+
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="/admin/dashboard">Dashboard</a> > Departments
+        </div>
+
+        <div class="header">
+            <h2>🏥 Departments Management</h2>
+        </div>
+
+        <div class="form-container" style="margin-bottom:30px;">
+            <h3 style="color:#2c3e50;">Add New Department</h3>
+            <form method="post" action="/admin/departments">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px;">
+                    <div class="form-group">
+                        <label>Name *</label>
+                        <input type="text" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <input type="text" name="description">
+                    </div>
+                    <div class="form-group">
+                        <label>Contact Phone</label>
+                        <input type="text" name="phone">
+                    </div>
+                </div>
+                <button class="btn-add" type="submit" style="margin-top:15px;">+ Add Department</button>
+            </form>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Contact</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:if="${#lists.isEmpty(departments)}">
+                        <td colspan="5" style="text-align: center; color: #999;">No departments found. <a href="#" style="color: #3498db;">Add one now.</a></td>
+                    </tr>
+                    <tr th:each="dept : ${departments}">
+                        <td th:text="${dept.id}"></td>
+                        <td th:text="${dept.name}"></td>
+                        <td th:text="${dept.description}"></td>
+                        <td th:text="${dept.phone}"></td>
+                        <td>
+                            <button class="btn-edit">Edit</button>
+                            <button class="btn-delete">Delete</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

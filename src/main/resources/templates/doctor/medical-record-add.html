@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Medical Record - Hospital Management System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+        }
+        .navbar {
+            background: #2c3e50;
+            padding: 15px 30px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .navbar h1 {
+            font-size: 1.5em;
+        }
+        .nav-menu {
+            display: flex;
+            gap: 20px;
+        }
+        .nav-menu a {
+            color: white;
+            text-decoration: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+        .nav-menu a:hover {
+            background: #34495e;
+        }
+        .container {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        .breadcrumb {
+            margin-bottom: 20px;
+            color: #666;
+        }
+        .breadcrumb a {
+            color: #3498db;
+            text-decoration: none;
+        }
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+        .form-container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .form-container h2 {
+            color: #2c3e50;
+            margin-bottom: 25px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #2c3e50;
+            font-weight: 600;
+        }
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #bdc3c7;
+            border-radius: 5px;
+            font-family: inherit;
+            font-size: 14px;
+        }
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        .form-group select {
+            cursor: pointer;
+        }
+        .btn-submit {
+            background: #27ae60;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+            font-size: 16px;
+        }
+        .btn-submit:hover {
+            background: #229954;
+        }
+        .btn-cancel {
+            background: #95a5a6;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+            font-size: 16px;
+            text-decoration: none;
+            display: inline-block;
+            margin-left: 10px;
+        }
+        .btn-cancel:hover {
+            background: #7f8c8d;
+        }
+        .logout-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .logout-btn:hover {
+            background: #c0392b;
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .form-full {
+            grid-column: 1 / -1;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div>
+            <h1>🏥 Hospital Management System</h1>
+            <div class="nav-menu">
+                <a href="/doctor/dashboard">Dashboard</a>
+                <a href="/doctor/patients">Patients</a>
+                <a href="/doctor/medical-records">Medical Records</a>
+                <a href="/doctor/prescriptions">Prescriptions</a>
+                <a href="/doctor/appointments">Appointments</a>
+                <a href="/doctor/reports">Reports</a>
+            </div>
+        </div>
+        <form action="/logout" method="post" style="margin:0;">
+            <button type="submit" class="logout-btn">Logout</button>
+        </form>
+    </div>
+
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="/doctor/dashboard">Dashboard</a> > <a href="/doctor/medical-records">Medical Records</a> > Add Medical Record
+        </div>
+
+        <div class="form-container">
+            <h2>📋 Add New Medical Record</h2>
+            <form method="POST" action="/doctor/medical-records/add">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="patientId">Patient *</label>
+                        <select id="patientId" name="patientId" required>
+                            <option value="">Select Patient</option>
+                            <option th:each="patient : ${patients}" th:value="${patient.id}" th:text="${patient.name}"></option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="doctorId">Doctor *</label>
+                        <select id="doctorId" name="doctorId" required>
+                            <option value="">Select Doctor</option>
+                            <option th:each="doctor : ${doctors}" th:value="${doctor.id}" th:text="${doctor.name}"></option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="symptoms">Symptoms</label>
+                    <textarea id="symptoms" name="symptoms" placeholder="Describe the patient's symptoms..."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="diagnosis">Diagnosis *</label>
+                    <textarea id="diagnosis" name="diagnosis" placeholder="Enter the diagnosis..." required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="treatment">Treatment *</label>
+                    <textarea id="treatment" name="treatment" placeholder="Describe the treatment plan..." required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="doctorNotes">Doctor's Notes</label>
+                    <textarea id="doctorNotes" name="doctorNotes" placeholder="Additional notes or observations..."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="followUpInstructions">Follow-up Instructions</label>
+                    <textarea id="followUpInstructions" name="followUpInstructions" placeholder="Instructions for follow-up care..."></textarea>
+                </div>
+                
+                <div style="margin-top: 30px;">
+                    <button type="submit" class="btn-submit">💾 Save Medical Record</button>
+                    <a href="/doctor/medical-records" class="btn-cancel">❌ Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

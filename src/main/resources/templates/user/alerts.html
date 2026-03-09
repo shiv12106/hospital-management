@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Alerts - Hospital Management System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+        }
+        .navbar {
+            background: #27ae60;
+            padding: 15px 30px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .navbar h1 {
+            font-size: 1.5em;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        .breadcrumb {
+            margin-bottom: 20px;
+            color: #666;
+        }
+        .breadcrumb a {
+            color: #3498db;
+            text-decoration: none;
+        }
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+        .header {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .header h2 {
+            color: #2c3e50;
+        }
+        .alert-box {
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            border-left: 5px solid;
+        }
+        .alert-info {
+            background: #d1ecf1;
+            border-color: #0c5460;
+            color: #0c5460;
+        }
+        .alert-warning {
+            background: #fff3cd;
+            border-color: #856404;
+            color: #856404;
+        }
+        .alert-danger {
+            background: #f8d7da;
+            border-color: #721c24;
+            color: #721c24;
+        }
+        .alert-success {
+            background: #d4edda;
+            border-color: #155724;
+            color: #155724;
+        }
+        .no-alerts {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            text-align: center;
+            color: #999;
+        }
+        .logout-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .logout-btn:hover {
+            background: #c0392b;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <h1>🏥 Hospital Management System</h1>
+        <form action="/logout" method="post" style="margin:0;">
+            <button type="submit" class="logout-btn">Logout</button>
+        </form>
+    </div>
+
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="/user/dashboard">Dashboard</a> > Health Alerts
+        </div>
+
+        <div class="header">
+            <h2>⚠️ Health Alerts & Reminders</h2>
+        </div>
+
+        <div class=\"alert-box alert-success\">
+            <strong>✅ Vaccination Reminder</strong><br>
+            Your annual flu vaccination is due. Please schedule an appointment with your doctor.
+        </div>
+
+        <div class=\"alert-box alert-info\">
+            <strong>📅 Upcoming Appointment</strong><br>
+            You have an appointment scheduled with Dr. Rajesh Kumar on Apr 10, 2024 at 2:00 PM.
+        </div>
+
+        <div class=\"alert-box alert-warning\">
+            <strong>⚠️ Medication Refill Due</strong><br>
+            Your prescription for Amlodipine 5mg will expire in 3 days. Please contact your doctor for renewal.
+        </div>
+
+        <div class=\"alert-box alert-info\">
+            <strong>💊 Medication Schedule</strong><br>
+            Don't forget to take your daily vitamins (Vitamin B12) with breakfast.
+        </div>
+
+        <div class=\"alert-box alert-success\">
+            <strong>✓ Lab Test Results Ready</strong><br>
+            Your recent blood test results are now available. All values are within normal range.
+        </div>
+
+        <div class=\"alert-box alert-warning\">
+            <strong>⚠️ Blood Pressure Monitoring</strong><br>
+            Your recent blood pressure reading was 145/92. Please monitor regularly and see your doctor if it remains high.
+        </div>
+    </div>
+</body>
+</html>

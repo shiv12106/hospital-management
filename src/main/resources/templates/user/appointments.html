@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Appointments - Hospital Management System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+        }
+        .navbar {
+            background: #27ae60;
+            padding: 15px 30px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .navbar h1 {
+            font-size: 1.5em;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        .breadcrumb {
+            margin-bottom: 20px;
+            color: #666;
+        }
+        .breadcrumb a {
+            color: #3498db;
+            text-decoration: none;
+        }
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+        .header {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header h2 {
+            color: #2c3e50;
+        }
+        .btn-add {
+            background: #27ae60;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+        .btn-add:hover {
+            background: #229954;
+        }
+        .table-container {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        thead {
+            background: #34495e;
+            color: white;
+        }
+        th {
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #ecf0f1;
+        }
+        tbody tr:hover {
+            background: #f9f9f9;
+        }
+        .btn-edit, .btn-cancel {
+            padding: 5px 10px;
+            margin: 0 5px;
+            border-radius: 3px;
+            text-decoration: none;
+            font-size: 0.9em;
+            cursor: pointer;
+            border: none;
+            transition: 0.3s;
+        }
+        .btn-edit {
+            background: #3498db;
+            color: white;
+        }
+        .btn-edit:hover {
+            background: #2980b9;
+        }
+        .btn-cancel {
+            background: #e74c3c;
+            color: white;
+        }
+        .btn-cancel:hover {
+            background: #c0392b;
+        }
+        .logout-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .logout-btn:hover {
+            background: #c0392b;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <h1>🏥 Hospital Management System</h1>
+        <form action="/logout" method="post" style="margin:0;">
+            <button type="submit" class="logout-btn">Logout</button>
+        </form>
+    </div>
+
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="/user/dashboard">Dashboard</a> > My Appointments
+        </div>
+
+        <div class="header">
+            <h2>📅 My Appointments</h2>
+            <a href="/user/appointments/add" class="btn-add">+ Schedule Appointment</a>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Doctor</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Department</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:if="${#lists.isEmpty(appointments)}">
+                        <td colspan="6" style="text-align: center; color: #999;">No appointments found. <a href="#" style="color: #3498db;">Schedule one now.</a></td>
+                    </tr>
+                    <tr th:each="appointment : ${appointments}">
+                        <td th:text="${appointment.doctor.name}"></td>
+                        <td th:text="${#temporals.format(appointment.appointmentDate, 'MMM dd, yyyy')}"></td>
+                        <td th:text="${#temporals.format(appointment.appointmentDate, 'hh:mm a')}"></td>
+                        <td th:text="${appointment.department.name}"></td>
+                        <td><span th:text="${appointment.status}" style="padding: 5px 10px; border-radius: 3px; color: white;" th:classappend="${appointment.status == 'COMPLETED' ? 'background: #27ae60;' : (appointment.status == 'CANCELLED' ? 'background: #e74c3c;' : 'background: #f39c12;')}"></span></td>
+                        <td>
+                            <a th:href="@{/user/appointments/{id}(id=${appointment.id})}" class="btn-edit">View Details</a>
+                            <a th:href="@{/user/appointments/cancel/{id}(id=${appointment.id})}" class="btn-cancel" th:if="${appointment.status != 'COMPLETED'}">Cancel</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

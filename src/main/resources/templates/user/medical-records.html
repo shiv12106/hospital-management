@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Medical Records - Hospital Management System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+        }
+        .navbar {
+            background: #27ae60;
+            padding: 15px 30px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .navbar h1 {
+            font-size: 1.5em;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        .breadcrumb {
+            margin-bottom: 20px;
+            color: #666;
+        }
+        .breadcrumb a {
+            color: #3498db;
+            text-decoration: none;
+        }
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+        .header {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .header h2 {
+            color: #2c3e50;
+        }
+        .table-container {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        thead {
+            background: #34495e;
+            color: white;
+        }
+        th {
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #ecf0f1;
+        }
+        tbody tr:hover {
+            background: #f9f9f9;
+        }
+        .btn-view {
+            background: #3498db;
+            color: white;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+        .btn-view:hover {
+            background: #2980b9;
+        }
+        .logout-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .logout-btn:hover {
+            background: #c0392b;
+        }
+        .nav-menu {
+            display: flex;
+            gap: 20px;
+        }
+        .nav-menu a {
+            color: white;
+            text-decoration: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+        .nav-menu a:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        .record-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .record-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .record-date {
+            color: #7f8c8d;
+            font-size: 0.9em;
+        }
+        .record-doctor {
+            color: #27ae60;
+            font-weight: 600;
+        }
+        .record-section {
+            margin-bottom: 15px;
+        }
+        .record-section h4 {
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        .record-section p {
+            color: #555;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div>
+            <h1>🏥 Hospital Management System</h1>
+            <div class="nav-menu">
+                <a href="/user/dashboard">Dashboard</a>
+                <a href="/user/medical-records">Medical Records</a>
+                <a href="/user/prescriptions">Prescriptions</a>
+                <a href="/user/profile">Profile</a>
+            </div>
+        </div>
+        <form action="/logout" method="post" style="margin:0;">
+            <button type="submit" class="logout-btn">Logout</button>
+        </form>
+    </div>
+
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="/user/dashboard">Dashboard</a> > My Medical Records
+        </div>
+
+        <div class="header">
+            <h2>📋 My Medical Records</h2>
+            <p th:if="${patient}" th:text="'Patient: ' + ${patient.name}"></p>
+        </div>
+
+        <div th:if="${#lists.isEmpty(records)}" class="record-card">
+            <p style="text-align: center; color: #999; padding: 40px;">
+                No medical records found. Your medical history will appear here once doctors add records.
+            </p>
+        </div>
+
+        <div th:each="record : ${records}" class="record-card">
+            <div class="record-header">
+                <div>
+                    <span class="record-date" th:text="${#temporals.format(record.recordDate, 'MMMM dd, yyyy')}"></span>
+                    <span class="record-doctor" th:text="'Dr. ' + ${record.doctor.name}"></span>
+                </div>
+            </div>
+            
+            <div class="record-section">
+                <h4>🩺 Diagnosis</h4>
+                <p th:text="${record.diagnosis}"></p>
+            </div>
+            
+            <div class="record-section">
+                <h4>💊 Treatment</h4>
+                <p th:text="${record.treatment}"></p>
+            </div>
+            
+            <div th:if="${record.symptoms}" class="record-section">
+                <h4>🤒 Symptoms</h4>
+                <p th:text="${record.symptoms}"></p>
+            </div>
+            
+            <div th:if="${record.doctorNotes}" class="record-section">
+                <h4>📝 Doctor's Notes</h4>
+                <p th:text="${record.doctorNotes}"></p>
+            </div>
+            
+            <div th:if="${record.followUpInstructions}" class="record-section">
+                <h4>📅 Follow-up Instructions</h4>
+                <p th:text="${record.followUpInstructions}"></p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

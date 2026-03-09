@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prescriptions Management - Hospital Management System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+        }
+        .navbar {
+            background: #27ae60;
+            padding: 15px 30px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .navbar h1 {
+            font-size: 1.5em;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        .breadcrumb {
+            margin-bottom: 20px;
+            color: #666;
+        }
+        .breadcrumb a {
+            color: #3498db;
+            text-decoration: none;
+        }
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+        .header {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .header h2 {
+            color: #2c3e50;
+        }
+        .table-container {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        thead {
+            background: #34495e;
+            color: white;
+        }
+        th {
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #ecf0f1;
+        }
+        tbody tr:hover {
+            background: #f9f9f9;
+        }
+        .btn-view {
+            background: #3498db;
+            color: white;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+        .btn-view:hover {
+            background: #2980b9;
+        }
+        .logout-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .logout-btn:hover {
+            background: #c0392b;
+        }
+        .form-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #2c3e50;
+            font-weight: 600;
+        }
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #bdc3c7;
+            border-radius: 5px;
+            font-family: inherit;
+        }
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        .btn-submit {
+            background: #27ae60;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .btn-submit:hover {
+            background: #229954;
+        }
+        .nav-menu {
+            display: flex;
+            gap: 20px;
+        }
+        .nav-menu a {
+            color: white;
+            text-decoration: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+        .nav-menu a:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div>
+            <h1>🏥 Hospital Management System</h1>
+            <div class="nav-menu">
+                <a href="/doctor/dashboard">Dashboard</a>
+                <a href="/doctor/patients">Patients</a>
+                <a href="/doctor/appointments">Appointments</a>
+                <a href="/doctor/prescriptions">Prescriptions</a>
+                <a href="/doctor/reports">Reports</a>
+            </div>
+        </div>
+        <form action="/logout" method="post" style="margin:0;">
+            <button type="submit" class="logout-btn">Logout</button>
+        </form>
+    </div>
+
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="/doctor/dashboard">Dashboard</a> > Prescriptions Management
+        </div>
+
+        <div class="header">
+            <h2>💊 Prescriptions Management</h2>
+        </div>
+
+        <div class="form-container">
+            <h3 style="color: #2c3e50; margin-bottom: 20px;">Add New Prescription</h3>
+            <form method="POST" action="/doctor/prescriptions/add">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div class="form-group">
+                        <label>Medicine Name *</label>
+                        <input type="text" name="medicineName" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Dosage *</label>
+                        <input type="text" name="dosage" placeholder="e.g., 500mg" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Frequency *</label>
+                        <input type="text" name="frequency" placeholder="e.g., Three times a day" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Duration *</label>
+                        <input type="text" name="duration" placeholder="e.g., 10 days" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Patient *</label>
+                        <select name="patientId" required>
+                            <option value="">Select Patient</option>
+                            <option th:each="patient : ${patients}" th:value="${patient.id}" th:text="${patient.name}"></option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Prescribing Doctor *</label>
+                        <select name="doctorId" required>
+                            <option value="">Select Doctor</option>
+                            <option th:each="doctor : ${doctors}" th:value="${doctor.id}" th:text="${doctor.name}"></option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="grid-column: 1 / -1;">
+                        <label>Notes</label>
+                        <textarea name="notes" placeholder="Additional notes..."></textarea>
+                    </div>
+                </div>
+                <button type="submit" class="btn-submit">+ Add Prescription</button>
+            </form>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Medicine Name</th>
+                        <th>Dosage</th>
+                        <th>Frequency</th>
+                        <th>Duration</th>
+                        <th>Patient</th>
+                        <th>Prescribed By</th>
+                        <th>Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:if="${#lists.isEmpty(prescriptions)}">
+                        <td colspan="8" style="text-align: center; color: #999;">No prescriptions found.</td>
+                    </tr>
+                    <tr th:each="prescription : ${prescriptions}">
+                        <td th:text="${prescription.medicineName}"></td>
+                        <td th:text="${prescription.dosage}"></td>
+                        <td th:text="${prescription.frequency}"></td>
+                        <td th:text="${prescription.duration}"></td>
+                        <td th:text="${prescription.patient.name}"></td>
+                        <td th:text="${prescription.doctor.name}"></td>
+                        <td th:text="${#temporals.format(prescription.prescribedDate, 'MMM dd, yyyy')}"></td>
+                        <td>
+                            <button class="btn-view">View Details</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

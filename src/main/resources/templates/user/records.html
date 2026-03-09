@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Medical Records - Hospital Management System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+        }
+        .navbar {
+            background: #27ae60;
+            padding: 15px 30px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .navbar h1 {
+            font-size: 1.5em;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        .breadcrumb {
+            margin-bottom: 20px;
+            color: #666;
+        }
+        .breadcrumb a {
+            color: #3498db;
+            text-decoration: none;
+        }
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+        .header {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .header h2 {
+            color: #2c3e50;
+        }
+        .record-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .record-card h3 {
+            color: #27ae60;
+            margin-bottom: 10px;
+        }
+        .record-card p {
+            color: #666;
+            margin: 5px 0;
+        }
+        .record-date {
+            color: #999;
+            font-size: 0.9em;
+        }
+        .logout-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .logout-btn:hover {
+            background: #c0392b;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <h1>🏥 Hospital Management System</h1>
+        <form action="/logout" method="post" style="margin:0;">
+            <button type="submit" class="logout-btn">Logout</button>
+        </form>
+    </div>
+
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="/user/dashboard">Dashboard</a> > My Medical Records
+        </div>
+
+        <div class="header">
+            <h2>📋 My Medical Records</h2>
+        </div>
+
+        <div th:if="${patients != null and patients.size() > 0}">
+            <div th:each="patient : ${patients}" class="record-card">
+                <h3 th:text="${patient.name}">Patient Name</h3>
+                <p><strong>Date of Birth:</strong> <span th:text="${#temporals.format(patient.dateOfBirth, 'MMM dd, yyyy')}">DOB</span></p>
+                <p><strong>Email:</strong> <span th:text="${patient.email}">email</span></p>
+                <p><strong>Phone:</strong> <span th:text="${patient.phone}">phone</span></p>
+                <p><strong>Blood Group:</strong> <span th:text="${patient.bloodGroup}">blood group</span></p>
+                <p><strong>Address:</strong> <span th:text="${patient.address}">address</span></p>
+                <p><strong>Medical History:</strong></p>
+                <p th:if="${patient.medicalHistory != null and patient.medicalHistory != ''}" th:text="${patient.medicalHistory}" style="background: #f9f9f9; padding: 10px; border-left: 3px solid #27ae60; margin-top: 5px;">Medical history details</p>
+                <p th:if="${patient.medicalHistory == null or patient.medicalHistory == ''}" style="color: #999;">No medical history recorded</p>
+            </div>
+        </div>
+
+        <div th:if="${patients == null or patients.size() == 0}" class="record-card">
+            <h3>No medical records found</h3>
+            <p>Your medical records will appear here once your doctor adds them to your profile.</p>
+        </div>
+    </div>
+</body>
+</html>

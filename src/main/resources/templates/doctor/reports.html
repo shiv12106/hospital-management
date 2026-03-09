@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports - Doctor Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+        }
+        .navbar {
+            background: #2c3e50;
+            padding: 15px 30px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .navbar h1 {
+            font-size: 1.5em;
+        }
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+        .nav-links a:hover {
+            background: #34495e;
+        }
+        .logout-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .logout-btn:hover {
+            background: #c0392b;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        .breadcrumb {
+            margin-bottom: 20px;
+            color: #666;
+        }
+        .breadcrumb a {
+            color: #3498db;
+            text-decoration: none;
+        }
+        .header {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .header h2 {
+            color: #2c3e50;
+        }
+        .table-container {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        thead {
+            background: #34495e;
+            color: white;
+        }
+        th {
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #ecf0f1;
+        }
+        tbody tr:hover {
+            background: #f9f9f9;
+        }
+        .btn-view {
+            background: #3498db;
+            color: white;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+        .btn-view:hover {
+            background: #2980b9;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+        .report-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            border-left: 5px solid #3498db;
+        }
+        .report-title {
+            color: #2c3e50;
+            font-size: 1.1em;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        .report-date {
+            color: #7f8c8d;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+        }
+        .report-content {
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <h1>🏥 Hospital Management System - Doctor</h1>
+        <div style="display: flex; gap: 15px; align-items: center;">
+            <div class="nav-links">
+                <a href="/doctor/dashboard">Dashboard</a>
+                <a href="/doctor/patients">Patients</a>
+                <a href="/doctor/appointments">Appointments</a>
+                <a href="/doctor/reports">Reports</a>
+            </div>
+            <form action="/logout" method="post" style="margin:0;">
+                <button type="submit" class="logout-btn">Logout</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="/doctor/dashboard">Dashboard</a> > Reports
+        </div>
+
+        <div class="header">
+            <h2>📊 Patient Reports</h2>
+        </div>
+
+        <div th:if="${#lists.isEmpty(reports)}" class="empty-state">
+            <p>No reports found</p>
+        </div>
+
+        <div th:unless="${#lists.isEmpty(reports)}">
+            <div th:each="report : ${reports}" class="report-card">
+                <div class="report-title" th:text="${report.title}"></div>
+                <div class="report-date" th:text="'Created: ' + ${report.createdDate}"></div>
+                <div class="report-content" th:text="${report.content}"></div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

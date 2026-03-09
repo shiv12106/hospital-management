@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Appointment Details - HMS</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f5f5f5; }
+        .navbar { background: #27ae60; padding: 15px 30px; color: white; display: flex; justify-content: space-between; align-items: center; }
+        .navbar h1 { font-size: 1.5em; }
+        .logout-btn { background: #e74c3c; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; }
+        .container { max-width: 800px; margin: 30px auto; padding: 0 20px; }
+        .breadcrumb { margin-bottom: 20px; color: #666; }
+        .breadcrumb a { color: #3498db; text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+        .detail-container { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); }
+        .detail-header { background: #27ae60; color: white; padding: 20px; border-radius: 8px 8px 0 0; margin: -30px -30px 20px -30px; }
+        .detail-header h2 { margin: 0; font-size: 1.5em; }
+        .detail-section { margin-bottom: 25px; }
+        .detail-row { display: flex; margin-bottom: 15px; }
+        .detail-label { font-weight: 600; color: #2c3e50; width: 150px; }
+        .detail-value { color: #666; }
+        .status-badge { padding: 5px 10px; border-radius: 3px; color: white; font-weight: 600; }
+        .status-scheduled { background: #f39c12; }
+        .status-completed { background: #27ae60; }
+        .status-cancelled { background: #e74c3c; }
+        .btn-back { background: #3498db; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; text-decoration: none; display: inline-block; }
+        .btn-back:hover { background: #2980b9; }
+        .error { color: #e74c3c; text-align: center; padding: 20px; }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <h1>🏥 Hospital Management System</h1>
+        <form action="/logout" method="post" style="margin:0;">
+            <button type="submit" class="logout-btn">Logout</button>
+        </form>
+    </div>
+
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="/user/dashboard">Dashboard</a> &gt; <a href="/user/appointments">My Appointments</a> &gt; Details
+        </div>
+
+        <div th:if="${error}" class="error">
+            <p th:text="${error}"></p>
+        </div>
+
+        <div th:if="${appointment != null}" class="detail-container">
+            <div class="detail-header">
+                <h2>📅 Appointment Details</h2>
+            </div>
+
+            <div class="detail-section">
+                <div class="detail-row">
+                    <div class="detail-label">Appointment ID:</div>
+                    <div class="detail-value" th:text="${appointment.id}"></div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Doctor:</div>
+                    <div class="detail-value" th:text="${appointment.doctor.name}"></div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Department:</div>
+                    <div class="detail-value" th:text="${appointment.department != null ? appointment.department.name : 'N/A'}"></div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Date:</div>
+                    <div class="detail-value" th:text="${#temporals.format(appointment.appointmentDate, 'MMMM dd, yyyy')}"></div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Time:</div>
+                    <div class="detail-value" th:text="${#temporals.format(appointment.appointmentDate, 'hh:mm a')}"></div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Reason:</div>
+                    <div class="detail-value" th:text="${appointment.reason != null ? appointment.reason : 'N/A'}"></div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Status:</div>
+                    <div class="detail-value">
+                        <span th:classappend="${appointment.status == 'COMPLETED' ? 'status-completed' : (appointment.status == 'CANCELLED' ? 'status-cancelled' : 'status-scheduled')}" class="status-badge" th:text="${appointment.status}"></span>
+                    </div>
+                </div>
+                <div class="detail-row" th:if="${appointment.notes != null}">
+                    <div class="detail-label">Notes:</div>
+                    <div class="detail-value" th:text="${appointment.notes}"></div>
+                </div>
+            </div>
+
+            <div style="margin-top: 30px; text-align: center;">
+                <a href="/user/appointments" class="btn-back">← Back to Appointments</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
