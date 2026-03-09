@@ -21,7 +21,7 @@ public class MedicalRecordService {
     }
     
     public Optional<MedicalRecord> getMedicalRecordById(Long id) {
-        return medicalRecordRepository.findById(id);
+        return id != null ? medicalRecordRepository.findById(id) : Optional.empty();
     }
     
     public List<MedicalRecord> getMedicalRecordsByPatient(Patient patient) {
@@ -36,7 +36,9 @@ public class MedicalRecordService {
     }
     
     public void deleteMedicalRecord(Long id) {
-        medicalRecordRepository.deleteById(id);
+        if (id != null) {
+            medicalRecordRepository.deleteById(id);
+        }
     }
     
     /**

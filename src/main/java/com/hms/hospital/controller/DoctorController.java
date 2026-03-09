@@ -41,7 +41,7 @@ public class DoctorController {
                             @RequestParam Long departmentId,
                             @RequestParam(required = false) String qualifications,
                             @RequestParam(required = false) Integer experience) {
-        Department dept = departmentRepository.findById(departmentId).orElse(null);
+        Department dept = departmentId != null ? departmentRepository.findById(departmentId).orElse(null) : null;
         Doctor doc = new Doctor();
         doc.setName(name);
         doc.setSpecialization(specialization);

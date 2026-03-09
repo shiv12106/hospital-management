@@ -21,7 +21,7 @@ public class PrescriptionService {
     }
     
     public Optional<Prescription> getPrescriptionById(Long id) {
-        return prescriptionRepository.findById(id);
+        return id != null ? prescriptionRepository.findById(id) : Optional.empty();
     }
     
     public List<Prescription> getPrescriptionsByPatient(Patient patient) {
@@ -40,7 +40,9 @@ public class PrescriptionService {
     }
     
     public void deletePrescription(Long id) {
-        prescriptionRepository.deleteById(id);
+        if (id != null) {
+            prescriptionRepository.deleteById(id);
+        }
     }
     
     /**

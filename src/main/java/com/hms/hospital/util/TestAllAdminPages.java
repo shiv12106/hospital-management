@@ -1,10 +1,9 @@
 package com.hms.hospital.util;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.net.CookieManager;
 import java.net.CookiePolicy;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
@@ -17,7 +16,8 @@ public class TestAllAdminPages {
         test("login page", "http://localhost:8081/login", "GET");
         
         // POST login
-        URL postUrl = new URL("http://localhost:8081/login");
+        URI postUri = URI.create("http://localhost:8081/login");
+        URL postUrl = postUri.toURL();
         HttpURLConnection post = (HttpURLConnection) postUrl.openConnection();
         post.setRequestMethod("POST");
         post.setDoOutput(true);
@@ -37,7 +37,8 @@ public class TestAllAdminPages {
     
     private static void test(String name, String urlStr, String method) throws Exception {
         try {
-            URL url = new URL(urlStr);
+            URI uri = URI.create(urlStr);
+            URL url = uri.toURL();
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod(method);
             conn.connect();

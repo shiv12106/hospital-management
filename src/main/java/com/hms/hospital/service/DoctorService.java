@@ -19,15 +19,17 @@ public class DoctorService {
     }
     
     public Optional<Doctor> getDoctorById(Long id) {
-        return doctorRepository.findById(id);
+        return id != null ? doctorRepository.findById(id) : Optional.empty();
     }
     
     public Doctor saveDoctor(Doctor doctor) {
-        return doctorRepository.save(doctor);
+        return doctor != null ? doctorRepository.save(doctor) : null;
     }
     
     public void deleteDoctor(Long id) {
-        doctorRepository.deleteById(id);
+        if (id != null) {
+            doctorRepository.deleteById(id);
+        }
     }
     
     public Optional<Doctor> getDoctorByEmail(String email) {

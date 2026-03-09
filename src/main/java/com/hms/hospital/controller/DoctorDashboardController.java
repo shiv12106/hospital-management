@@ -79,7 +79,7 @@ public class DoctorDashboardController {
     
     @GetMapping("/patients/{id}")
     public String getPatientDetails(@PathVariable Long id, Model model) {
-        Patient patient = patientRepository.findById(id).orElse(null);
+        Patient patient = id != null ? patientRepository.findById(id).orElse(null) : null;
         if (patient != null) {
             model.addAttribute("patient", patient);
             
@@ -142,8 +142,8 @@ public class DoctorDashboardController {
                                   @RequestParam String notes,
                                   Model model) {
         try {
-            Patient patient = patientRepository.findById(patientId).orElse(null);
-            Doctor doctor = doctorRepository.findById(doctorId).orElse(null);
+            Patient patient = patientId != null ? patientRepository.findById(patientId).orElse(null) : null;
+            Doctor doctor = doctorId != null ? doctorRepository.findById(doctorId).orElse(null) : null;
             
             if (patient != null && doctor != null) {
                 Prescription prescription = new Prescription();

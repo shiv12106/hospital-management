@@ -3,7 +3,6 @@ package com.hms.hospital.controller;
 import com.hms.hospital.entity.Patient;
 import com.hms.hospital.entity.User;
 import com.hms.hospital.entity.Appointment;
-import com.hms.hospital.entity.MedicalRecord;
 import com.hms.hospital.repository.PatientRepository;
 import com.hms.hospital.repository.UserRepository;
 import com.hms.hospital.repository.AppointmentRepository;
@@ -68,7 +67,7 @@ public class AdminDashboardController {
                            @RequestParam(required = false) String medicalHistory,
                            @RequestParam Long userId) {
         // Find user by ID
-        User user = userRepository.findById(userId).orElse(null);
+        User user = userId != null ? userRepository.findById(userId).orElse(null) : null;
         if (user == null) {
             return "redirect:/admin/patients?error=user";
         }
@@ -105,8 +104,8 @@ public class AdminDashboardController {
                            @RequestParam String dateTime,
                            @RequestParam String reason) {
         Appointment appointment = new Appointment();
-        appointment.setPatient(patientRepository.findById(patientId).orElse(null));
-        appointment.setDoctor(doctorRepository.findById(doctorId).orElse(null));
+        appointment.setPatient(patientId != null ? patientRepository.findById(patientId).orElse(null) : null);
+        appointment.setDoctor(doctorId != null ? doctorRepository.findById(doctorId).orElse(null) : null);
         appointment.setDepartment(departmentId != null ? departmentRepository.findById(departmentId).orElse(null) : null);
         appointment.setAppointmentDate(java.time.LocalDateTime.parse(dateTime));
         appointment.setReason(reason);
@@ -118,9 +117,11 @@ public class AdminDashboardController {
     
     @GetMapping("/appointments/edit/{id}")
     public String editAppointmentForm(@PathVariable Long id, Model model) {
-        appointmentRepository.findById(id).ifPresent(appointment -> {
-            model.addAttribute("appointment", appointment);
-        });
+        if (id != null) {
+            appointmentRepository.findById(id).ifPresent(appointment -> {
+                model.addAttribute("appointment", appointment);
+            });
+        }
         model.addAttribute("patients", patientRepository.findAll());
         model.addAttribute("doctors", doctorRepository.findAll());
         model.addAttribute("departments", departmentRepository.findAll());
@@ -134,21 +135,25 @@ public class AdminDashboardController {
                                @RequestParam(required = false) Long departmentId,
                                @RequestParam String dateTime,
                                @RequestParam String reason) {
-        appointmentRepository.findById(id).ifPresent(appointment -> {
-            appointment.setPatient(patientRepository.findById(patientId).orElse(null));
-            appointment.setDoctor(doctorRepository.findById(doctorId).orElse(null));
+        if (id != null) {
+            appointmentRepository.findById(id).ifPresent(appointment -> {
+                appointment.setPatient(patientId != null ? patientRepository.findById(patientId).orElse(null) : null);
+                appointment.setDoctor(doctorId != null ? doctorRepository.findById(doctorId).orElse(null) : null);
             appointment.setDepartment(departmentId != null ? departmentRepository.findById(departmentId).orElse(null) : null);
-            appointment.setAppointmentDate(java.time.LocalDateTime.parse(dateTime));
-            appointment.setReason(reason);
-            appointmentRepository.save(appointment);
-        });
+                appointment.setAppointmentDate(java.time.LocalDateTime.parse(dateTime));
+                appointment.setReason(reason);
+                appointmentRepository.save(appointment);
+            });
+        }
         
         return "redirect:/admin/appointments";
     }
     
     @GetMapping("/appointments/delete/{id}")
     public String deleteAppointment(@PathVariable Long id) {
-        appointmentRepository.deleteById(id);
+        if (id != null) {
+            appointmentRepository.deleteById(id);
+        }
         return "redirect:/admin/appointments";
     }
     

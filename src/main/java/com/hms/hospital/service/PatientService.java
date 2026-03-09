@@ -20,7 +20,7 @@ public class PatientService {
     }
     
     public Optional<Patient> getPatientById(Long id) {
-        return patientRepository.findById(id);
+        return id != null ? patientRepository.findById(id) : Optional.empty();
     }
     
     public List<Patient> getPatientsByUser(User user) {
@@ -32,11 +32,13 @@ public class PatientService {
     }
     
     public Patient savePatient(Patient patient) {
-        return patientRepository.save(patient);
+        return patient != null ? patientRepository.save(patient) : null;
     }
     
     public void deletePatient(Long id) {
-        patientRepository.deleteById(id);
+        if (id != null) {
+            patientRepository.deleteById(id);
+        }
     }
     
     /**

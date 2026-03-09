@@ -25,7 +25,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -154,10 +156,36 @@ public class UserDashboardController {
             // Get current patient for display
             appointmentService.getCurrentPatient(username).ifPresent(patient -> {
                 model.addAttribute("patient", patient);
+                
+                // Generate alerts based on patient's appointments and prescriptions
+                List<String> alerts = new ArrayList<>();
+                
+                // Check for upcoming appointments
+                List<Appointment> appointments = appointmentService.getCurrentUserAppointments(username);
+                LocalDate today = LocalDate.now();
+                for (Appointment apt : appointments) {
+                    if (apt.getAppointmentDate().toLocalDate().isEqual(today.plusDays(1))) {
+                        alerts.add("Reminder: You have an appointment tomorrow at " + apt.getAppointmentDate().toLocalTime().toString());
+                    } else if (apt.getAppointmentDate().toLocalDate().isEqual(today)) {
+                        alerts.add("Important: You have an appointment today at " + apt.getAppointmentDate().toLocalTime().toString());
+                    }
+                }
+                
+                // Check for recent prescriptions that need follow-up
+                List<Prescription> prescriptions = prescriptionService.getPrescriptionsByPatientOrderByDate(patient);
+                for (Prescription pres : prescriptions) {
+                    if (pres.getPrescribedDate().isAfter(today.minusDays(7))) {
+                        alerts.add("New Prescription: " + pres.getMedicineName() + " - " + pres.getDosage() + " " + pres.getFrequency());
+                    }
+                }
+                
+                // Add welcome message if no alerts
+                if (alerts.isEmpty()) {
+                    alerts.add("Welcome! You have no new alerts at this time.");
+                }
+                
+                model.addAttribute("alerts", alerts);
             });
-            
-            // TODO: In a real application, you would fetch actual alerts from database
-            // For now, the template has static alerts
         }
         return "user/alerts";
     }
@@ -268,13 +296,15 @@ public class UserDashboardController {
             
             // Security check: Only allow viewing own appointments
             appointmentService.getCurrentPatient(username).ifPresent(patient -> {
-                appointmentRepository.findById(id).ifPresent(appointment -> {
-                    if (appointment.getPatient().getId().equals(patient.getId()) && 
-                        !appointment.getStatus().equals("COMPLETED")) {
-                        appointment.setStatus("CANCELLED");
-                        appointmentRepository.save(appointment);
-                    }
-                });
+                if (id != null) {
+                    appointmentRepository.findById(id).ifPresent(appointment -> {
+                        if (appointment.getPatient().getId().equals(patient.getId()) && 
+                            !appointment.getStatus().equals("COMPLETED")) {
+                            appointment.setStatus("CANCELLED");
+                            appointmentRepository.save(appointment);
+                        }
+                    });
+                }
             });
         }
         return "redirect:/user/appointments";

@@ -24,7 +24,7 @@ public class AppointmentService {
     }
     
     public Optional<Appointment> getAppointmentById(Long id) {
-        return appointmentRepository.findById(id);
+        return id != null ? appointmentRepository.findById(id) : Optional.empty();
     }
     
     public List<Appointment> getAppointmentsByPatient(Patient patient) {
@@ -32,11 +32,13 @@ public class AppointmentService {
     }
     
     public Appointment saveAppointment(Appointment appointment) {
-        return appointmentRepository.save(appointment);
+        return appointment != null ? appointmentRepository.save(appointment) : null;
     }
     
     public void deleteAppointment(Long id) {
-        appointmentRepository.deleteById(id);
+        if (id != null) {
+            appointmentRepository.deleteById(id);
+        }
     }
     
     /**

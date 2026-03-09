@@ -4,13 +4,11 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.CookieManager;
 import java.net.CookiePolicy;
-import java.net.HttpCookie;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
 
 public class TestAdminPage {
     public static void main(String[] args) throws Exception {
@@ -18,7 +16,8 @@ public class TestAdminPage {
         java.net.CookieHandler.setDefault(cm);
         
         // GET login page to obtain JSESSIONID
-        URL loginUrl = new URL("http://localhost:8081/login");
+        URI loginUri = URI.create("http://localhost:8081/login");
+        URL loginUrl = loginUri.toURL();
         HttpURLConnection conn = (HttpURLConnection) loginUrl.openConnection();
         conn.setRequestMethod("GET");
         conn.connect();
@@ -26,7 +25,8 @@ public class TestAdminPage {
         conn.disconnect();
         
         // submit credentials
-        URL postUrl = new URL("http://localhost:8081/login");
+        URI postUri = URI.create("http://localhost:8081/login");
+        URL postUrl = postUri.toURL();
         HttpURLConnection post = (HttpURLConnection) postUrl.openConnection();
         post.setRequestMethod("POST");
         post.setDoOutput(true);
@@ -40,7 +40,8 @@ public class TestAdminPage {
         post.disconnect();
         
         // access admin appointments
-        URL adminUrl = new URL("http://localhost:8081/admin/appointments");
+        URI adminUri = URI.create("http://localhost:8081/admin/appointments");
+        URL adminUrl = adminUri.toURL();
         HttpURLConnection admin = (HttpURLConnection) adminUrl.openConnection();
         admin.setRequestMethod("GET");
         admin.connect();
