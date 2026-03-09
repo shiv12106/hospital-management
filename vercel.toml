@@ -1,0 +1,18 @@
+# Vercel Deployment Configuration for Hospital Management System
+
+# Serverless Configuration
+version = 2
+
+# Build Configuration
+[[builds]]
+  src = "src/main/java/com/hms/hospital/HospitalApplication.java"
+  use = "@vercel/java"
+
+# Route Configuration
+[[routes]]
+  src = "/(.*)"
+  dest = "/src/main/java/com/hms/hospital/HospitalApplication.java"
+
+# Environment Variables
+[env]
+  SPRING_PROFILES_ACTIVE = "vercel"

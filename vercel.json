@@ -1,0 +1,40 @@
+# 🚀 Hospital Management System - Vercel Deployment Guide
+
+## ⚠️ Important Considerations
+
+Vercel is optimized for frontend applications and serverless functions. For a Spring Boot application, we have several options:
+
+### Option 1: Serverless Deployment (Recommended for Vercel)
+Convert the Spring Boot app to run as serverless functions
+
+### Option 2: External Server + Vercel Frontend
+Keep Spring Boot on a separate server and deploy only the frontend to Vercel
+
+### Option 3: Alternative Platforms
+Use platforms better suited for full-stack Spring Boot apps
+
+---
+
+## 🎯 Option 1: Serverless Deployment on Vercel
+
+### Step 1: Add Vercel Configuration
+<tool_call>write_to_file
+<arg_key>CodeContent</arg_key>
+<arg_value>{
+  "version": 2,
+  "builds": [
+    {
+      "src": "src/main/java/com/hms/hospital/HospitalApplication.java",
+      "use": "@vercel/java"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/src/main/java/com/hms/hospital/HospitalApplication.java"
+    }
+  ],
+  "env": {
+    "SPRING_PROFILES_ACTIVE": "vercel"
+  }
+}
