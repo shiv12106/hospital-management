@@ -118,15 +118,15 @@
             <p>Hospital Management System</p>
         </div>
         <div th:if="${param.error}" class="alert alert-error">
-            Invalid username or password
+            <strong>Login Failed!</strong> Invalid username or password. Please try again.
         </div>
-
+        
         <div th:if="${param.logout}" class="alert alert-success">
-            You have been logged out successfully
+            <strong>Success!</strong> You have been logged out successfully.
         </div>
-
+        
         <div th:if="${param.registered}" class="alert alert-success">
-            Registration successful! Please log in.
+            <strong>Success!</strong> Registration successful! Please log in.
         </div>
 
         <form th:action="@{/login}" method="post">
